@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <title>Report Card Maker</title>
+  <style>
+    body {
+  padding: 40px;
+}   .assessment-sheet {
+      font-family: Arial, sans-serif;
+      margin: 0 auto;
+      padding: 40px;
+      border: 1px solid black;
+      width: 80%;
+    }
+
+    .assessment-sheet h2 {
+      text-align: center;
+    }
+
+    .student-marks {
+      margin: 20px 0;
+    }
+
+    .student-marks h3 {
+      margin-bottom: 10px;
+    }
+
+    .total-marks {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Assessment Maker</h1>
+  <form>
+    <div class="form-group">
+      <label>Number of Students: <input type="number" id="numStudents" class="form-control"></label>
+    </div>
+    <button id="generateSheet" class="btn btn-primary">Generate Sheet</button>
+  </form>
+  <div id="assessmentSheet" class="assessment-sheet" style="display: none;">
+    <h2>Assessment Sheet</h2>
+  </div>
+
+  <script>
+   // Get the generate button and form elements
+var generateButton = document.getElementById("generateSheet");
+var form = document.getElementsByTagName("form")[0];
+var numStudents = document.getElementById("numStudents");
+
+// Add event listener to generate button
+generateButton.addEventListener("click", function(e) {
+  e.preventDefault();
+  createSheet();
+});
+
+function createSheet() {
+  // Get number of students
+  var num = numStudents.value;
+
+  // Create form fields for each student
+  for (var i = 1; i <= num; i++) {
+    var studentGroup = document.createElement("div");
+    studentGroup.classList.add("form-group");
+
+    var studentNameLabel = document.createElement("label");
+    studentNameLabel.innerHTML = "Student " + i + " Name: ";
+    var studentNameInput = document.createElement("input");
+    studentNameInput.type = "text";
+    studentNameInput.classList.add("form-control");
+    studentNameLabel.appendChild(studentNameInput);
+    studentGroup.appendChild(studentNameLabel);
+
+    var mathGradeLabel = document.createElement("label");
+    mathGradeLabel.innerHTML = "Math Grade: ";
+    var mathGradeInput = document.createElement("input");
+    mathGradeInput.type = "number";
+    mathGradeInput.classList.add("form-control");
+    mathGradeLabel.appendChild(mathGradeInput);
+    studentGroup.appendChild(mathGradeLabel);
+
+    var scienceGradeLabel = document.createElement("label");
+    scienceGradeLabel.innerHTML = "Science Grade: ";
+    var scienceGradeInput = document.createElement("input");
+    scienceGradeInput.type = "number";
+    scienceGradeInput.classList.add("form-control");
+    scienceGradeLabel.appendChild(
+scienceGradeInput);
+        studentGroup.appendChild(scienceGradeLabel);
+
+        var englishGradeLabel = document.createElement("label");
+        englishGradeLabel.innerHTML = "English Grade: ";
+        var englishGradeInput = document.createElement("input");
+        englishGradeInput.type = "number";
+        englishGradeInput.classList.add("form-control");
+        englishGradeLabel.appendChild(englishGradeInput);
+        studentGroup.appendChild(englishGradeLabel);
+
+        var socialStudiesGradeLabel = document.createElement("label");
+        socialStudiesGradeLabel.innerHTML = "SocialStudies Grade: ";
+var socialStudiesGradeInput = document.createElement("input");
+socialStudiesGradeInput.type = "number";
+socialStudiesGradeInput.classList.add("form-control");
+socialStudiesGradeLabel.appendChild(socialStudiesGradeInput);
+studentGroup.appendChild(socialStudiesGradeLabel);
+form.appendChild(studentGroup);
+  }
+
+  // Create a submit button
+  var submitButton = document.createElement("button");
+  submitButton.innerHTML = "Submit";
+  submitButton.classList.add("btn", "btn-primary");
+  form.appendChild(submitButton);
+
+  // Add event listener to submit button
+  submitButton.addEventListener("click", function(e) {
+    e.preventDefault();
+    displayResults();
+  });
+}
+
+function displayResults() {
+  // Get all student names and grades
+  var studentNames = document.getElementsByClassName("form-control");
+  var studentNameArray = [];
+  var studentMarksArray = [];
+  var totalMarksArray = [];
+
+  for (var i = 0; i < studentNames.length; i++) {
+    if (i % 5 === 0) {
+      studentNameArray.push(studentNames[i].value);
+    } else {
+      studentMarksArray.push(studentNames[i].value);
+    }
+  }
+
+  // Add all grades for each student
+  for (var j = 0; j < studentMarksArray.length; j += 5) {
+    var studentTotal = 0;
+    for (var k = j; k < j + 4; k++) {
+      studentTotal += parseFloat(studentMarksArray[k]);
+    }
+    totalMarksArray.push(studentTotal);
+  }
+
+  // Get the assessment sheet element
+  var assessmentSheet = document.getElementById("assessmentSheet");
+
+  // Show the assessment sheet
+  assessmentSheet.style.display = "block";
+
+  // Add the student names, marks, and total marks to the assessment sheet
+  for (var l = 0; l < studentNameArray.length; l++) {
+    var studentMarks = document.createElement("div");
+    studentMarks.classList.add("student-marks");
+
+    var studentName = document.createElement("h3");
+    studentName.innerHTML = studentNameArray[l];
+    studentMarks.appendChild(studentName);
+
+    for (var m = l * 4; m < (l * 4) + 4; m++) {
+      var subject = document.createElement("p");
+      subject.innerHTML = studentMarksArray[m];
+      studentMarks.appendChild(subject);
+    }
+
+    var totalMarks = document.createElement("p");
+    totalMarks.classList.add("total-marks");
+    totalMarks.innerHTML = "Total Marks: " + totalMarksArray[l];
+    studentMarks.appendChild(totalMarks);
+
+    assessmentSheet.appendChild(studentMarks);
+  }
+
+  // Add a button to print the assessment sheet
+  var printButton = document.createElement("button");
+  printButton.innerHTML = "Print";
+printButton.classList.add("btn", "btn-secondary");
+assessmentSheet.appendChild(printButton);
+  // Add event listener to print button
+  printButton.addEventListener("click", function() {
+    window.print();
+  });
+}
+  </script>
+</body>
+</html>
